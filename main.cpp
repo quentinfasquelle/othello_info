@@ -1,10 +1,12 @@
 #include <iostream>
 #include "partie.h"
 
+
 using namespace std;
 
 int main(int argc, char *argv[]) {
     int a;
+
   cout<<"***************************************************"<<endl;
   cout<<"********************* OTHELLO *********************"<<endl;
   cout<<"***************************************************"<<endl;

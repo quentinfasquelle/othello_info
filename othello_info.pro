@@ -13,7 +13,8 @@ SOURCES += main.cpp \
     pion.cpp \
     grille.cpp \
     manager.cpp \
-    partie.cpp
+    partie.cpp \
+    arbre.cpp
 
 HEADERS += \
     pion.h \

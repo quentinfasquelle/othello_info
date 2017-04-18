@@ -16,6 +16,8 @@ class Manager {
   void RafraichirAffichage();
   void AjouterAlea();
   void ChangerJoueur(bool humain);
+  void Elimine(int x, int y);
+  void Balayage();
 };
 
 #endif  // MANAGER_H

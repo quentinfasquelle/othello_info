@@ -19,7 +19,7 @@ void Manager::RafraichirAffichage() {
 
 void Manager::AjouterPion() {
   int x, y;
-  int i, j;
+  //int i, j;
 
   RafraichirAffichage();
   cout << "Vous avez choisi de rentrer un pion sur la grille" << endl;
@@ -45,26 +45,7 @@ void Manager::AjouterPion() {
 
   if (grille->EstVide(x - 1, y - 1)) {
     grille->AjouterPion(x - 1, y - 1, NOIR);
-    for(j = y-2; j < y+3 ; j++)
-    {
-        i = x-2;
-        if(grille->EstDeType(i,j,BLANC))ChangerPion(i,j,BLANC);
-    }
-    for(j = y-2; j < y+3 ; j++)
-    {
-        i = x+2;
-        if(grille->EstDeType(i,j,BLANC))ChangerPion(i,j,BLANC);
-    }
-    for(i= x-1; i < x+2 ; i++)
-    {
-        j = x-1;
-        if(grille->EstDeType(i,j,BLANC))ChangerPion(i,j,BLANC);
-    }
-    for(i= x-1; i < x+2 ; i++)
-    {
-        j = x+1;
-        if(grille->EstDeType(i,j,BLANC))ChangerPion(i,j,BLANC);
-    }
+    Elimine(x-1,y-1);
 
     cout << "Le Pion a bien ete ajoute!" << endl;
   } else {
@@ -88,19 +69,24 @@ int rand_a_b(int a, int b){
 void Manager::AjouterAlea() {
 
     int sortie = 0;
-    int i = 0;
-    int j = 0;
+   // int i = 0;
+    // int j = 0;
+    int k = 0;
+    int l = 0;
+    //int x = 0;
+    //int y = 0;
 
     while(sortie == 0)
     {
-        i = rand_a_b(0,8);
-        j = rand_a_b(0,8);
-        if(grille->EstVide(i,j)){
-            grille->AjouterPion(i,j,BLANC);
+        k = rand_a_b(0,8);
+        l = rand_a_b(0,8);
+        if(grille->EstVide(k,l)){
+            grille->AjouterPion(k,l,BLANC);
             sortie = 1;
         }
     }
-    RafraichirAffichage();
+
+   RafraichirAffichage();
 }
 
 
@@ -109,4 +95,49 @@ void Manager::ChangerJoueur(bool humain) {
     joueur = NOIR;
   else
     joueur = BLANC;
+}
+
+
+void Manager::Elimine(int x, int y){
+    int i,j;
+    for(j=y-2; j<=y+2; j++)
+    {
+        i = x-2;
+        if(grille->EstDeType(i,j,NOIR))
+        {
+            i=x-1;
+            if(grille->EstDeType(i,j,BLANC))ChangerPion(i,j,BLANC);
+        }
+    }
+    for(j=y-2; j<=y+2; j++)
+    {
+        i = x+2;
+        if(grille->EstDeType(i,j,NOIR))
+        {
+            i=x+1;
+            if(grille->EstDeType(i,j,BLANC))ChangerPion(i,j,BLANC);
+        }
+    }
+    if(grille->EstDeType(x,y-2,NOIR))ChangerPion(x,y-1,BLANC);
+    if(grille->EstDeType(x,y+2,NOIR))ChangerPion(x,y+1,BLANC);
+}
+
+
+int Manager::Balayage()
+{
+    int tab[8][8];
+    int i,j;
+    for(i=0; i<8; i++){
+        for(j=0; j<8; j++){
+            if(grille->EstVide(i,j))tab[i][j]=VIDE;
+            if(grille->EstDeType(i,j,BLANC))tab[i][j]=BLANC;
+            else tab[i][j]=NOIR;
+        }
+    }
+    for(i=0; i<8; i++){
+        for(j=0; j<8; j++){
+
+        }
+    }
+    return tab;
 }
