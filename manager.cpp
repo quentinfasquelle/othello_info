@@ -6,7 +6,6 @@
 using namespace std;
 
 
-
 Manager::Manager() {
   grille = new Grille();
   joueur = BLANC;
@@ -17,9 +16,8 @@ Manager::~Manager() {}
 
 void Manager::RafraichirAffichage() {
   CLEAR();
-
+  Balayage();
   grille->Afficher();
-  grille->AfficherTab();
 }
 
 
@@ -48,14 +46,14 @@ void Manager::AjouterPion() {
 
   RafraichirAffichage();
 
-  if (grille->EstVide(x - 1, y - 1)) {
+  if (grille->EstDeType(x - 1, y - 1)) {
     grille->AjouterPion(x - 1, y - 1, NOIR);
     Elimine(x-1,y-1);
 
     cout << "Le Pion a bien ete ajoute!" << endl;
   } else {
     cout << "La case choisie n'est pas vide, ou pas en bordure!" << endl;
-    Balayage();
+    //Balayage();
     AjouterPion();
   }
 }
@@ -86,7 +84,7 @@ void Manager::AjouterAlea() {
     {
         k = rand_a_b(0,8);
         l = rand_a_b(0,8);
-        if(grille->EstVide(k,l)){
+        if(grille->EstDeType(k,l)){
             grille->AjouterPion(k,l,BLANC);
             sortie = 1;
         }
@@ -105,27 +103,66 @@ void Manager::ChangerJoueur(bool humain) {
 
 
 void Manager::Elimine(int x, int y){
-    int i,j;
-    for(j=y-2; j<=y+2; j++)
-    {
-        i = x-2;
-        if(grille->EstDeType(i,j,NOIR))
-        {
-            i=x-1;
-            if(grille->EstDeType(i,j,BLANC))ChangerPion(i,j,BLANC);
+
+    if(grille->EstDeType(x,y,NOIR)){
+        if((x>=0 && y>=0) || (x+2<8 && y+2<8)){
+            if(grille->EstDeType(x+1,y+1,BLANC)){
+                if(grille->EstDeType(x+2,y+2,NOIR)){
+                    grille->contenu[x+1][y+1]->type = NOIR;
+                }
+            }
+        }
+        if((x>=0 && y>=0) || (x<8 && y+2<8)){
+            if(grille->EstDeType(x,y+1,BLANC)){
+                if(grille->EstDeType(x,y+2,NOIR)){
+                    grille->contenu[x][y+1]->type = NOIR;
+                }
+            }
+        }
+        if((x-2>=0 && y>=0) || (x<8 && y+2<8)){
+            if(grille->EstDeType(x-1,y+1,BLANC)){
+                if(grille->EstDeType(x-2,y+2,NOIR)){
+                    grille->contenu[x-1][y+1]->type = NOIR;
+                }
+            }
+        }
+        if((x-2>=0 && y>=0) || (x<8 && y<8)){
+            if(grille->EstDeType(x-1,y,BLANC)){
+                if(grille->EstDeType(x-2,y,NOIR)){
+                    grille->contenu[x-1][y]->type = NOIR;
+                }
+            }
+        }
+        if((x-2>=0 && y-2>=0) || (x<8 && y<8)){
+            if(grille->EstDeType(x-1,y-1,BLANC)){
+                if(grille->EstDeType(x-2,y-2,NOIR)){
+                    grille->contenu[x-1][y-1]->type = NOIR;
+                }
+            }
+        }
+        if((x>=0 && y-2>=0) || (x<8 && y<8)){
+            if(grille->EstDeType(x,y-1,BLANC)){
+                if(grille->EstDeType(x,y-2,NOIR)){
+                    grille->contenu[x][y-1]->type = NOIR;
+                }
+            }
+        }
+        if((x>=0 && y-2>=0) || (x+2<8 && y<8)){
+            if(grille->EstDeType(x+1,y-1,BLANC)){
+                if(grille->EstDeType(x+2,y-2,NOIR)){
+                    grille->contenu[x+1][y-1]->type = NOIR;
+                }
+            }
+        }
+        if((x>=0 && y>=0) || (x+2<8 && y<8)){
+            if(grille->EstDeType(x+1,y,BLANC)){
+                if(grille->EstDeType(x+2,y,NOIR)){
+                    grille->contenu[x+1][y]->type = NOIR;
+                }
+            }
         }
     }
-    for(j=y-2; j<=y+2; j++)
-    {
-        i = x+2;
-        if(grille->EstDeType(i,j,NOIR))
-        {
-            i=x+1;
-            if(grille->EstDeType(i,j,BLANC))ChangerPion(i,j,BLANC);
-        }
-    }
-    if(grille->EstDeType(x,y-2,NOIR))ChangerPion(x,y-1,BLANC);
-    if(grille->EstDeType(x,y+2,NOIR))ChangerPion(x,y+1,BLANC);
+
 }
 
 void Manager::Balayage()
@@ -133,11 +170,67 @@ void Manager::Balayage()
     int i,j;
     for(i=0; i<8; i++){
         for(j=0; j<8; j++){
-            if(grille->EstVide(i,j))grille->tab[i][j]->type=VIDE;
-            if(grille->EstDeType(i,j,BLANC))grille->tab[i][j]->type=BLANC;
-            else grille->tab[i][j]->type=NOIR;
-        }
+            if(grille->EstDeType(i,j,BLANC)){
+                if((i>=0 && j>=0) || (i+2<8 && j+2<8)){
+                    if(grille->EstDeType(i+1,j+1,NOIR)){
+                        if(grille->EstDeType(i+2,j+2)){
+                            grille->contenu[i+2][j+2]->type = JOUABLE;
+                        }
+                    }
+                }
+                if((i>=0 && j>=0) || (i<8 && j+2<8)){
+                    if(grille->EstDeType(i,j+1,NOIR)){
+                        if(grille->EstDeType(i,j+2)){
+                            grille->contenu[i][j+2]->type = JOUABLE;
+                        }
+                    }
+                }
+                if((i-2>=0 && j>=0) || (i<8 && j+2<8)){
+                    if(grille->EstDeType(i-1,j+1,NOIR)){
+                        if(grille->EstDeType(i-2,j+2)){
+                            grille->contenu[i-2][j+2]->type = JOUABLE;
+                        }
+                    }
+                }
+                if((i-2>=0 && j>=0) || (i<8 && j<8)){
+                    if(grille->EstDeType(i-1,j,NOIR)){
+                        if(grille->EstDeType(i-2,j)){
+                            grille->contenu[i-2][j]->type = JOUABLE;
+                        }
+                    }
+                }
+                if((i-2>=0 && j-2>=0) || (i<8 && j<8)){
+                    if(grille->EstDeType(i-1,j-1,NOIR)){
+                        if(grille->EstDeType(i-2,j-2)){
+                            grille->contenu[i-2][j-2]->type = JOUABLE;
+                        }
+                    }
+                }
+                if((i>=0 && j-2>=0) || (i<8 && j<8)){
+                    if(grille->EstDeType(i,j-1,NOIR)){
+                        if(grille->EstDeType(i,j-2)){
+                            grille->contenu[i][j-2]->type = JOUABLE;
+                        }
+                    }
+                }
+                if((i>=0 && j-2>=0) || (i+2<8 && j<8)){
+                    if(grille->EstDeType(i+1,j-1,NOIR)){
+                        if(grille->EstDeType(i+2,j-2)){
+                            grille->contenu[i+2][j-2]->type = JOUABLE;
+                        }
+                    }
+                }
+                if((i>=0 && j>=0) || (i+2<8 && j<8)){
+                    if(grille->EstDeType(i+1,j,NOIR)){
+                        if(grille->EstDeType(i+2,j)){
+                            grille->contenu[i+2][j]->type = JOUABLE;
+                        }
+                    }
+                }
+            }
 
+        }
     }
+
 
 }

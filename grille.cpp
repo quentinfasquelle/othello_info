@@ -26,7 +26,7 @@ Grille::Grille() {  // Déclaration de la grille avec les montagnes
   contenu[4][3] = new Noir();
 }
 
-bool Grille::EstVide(int x, int y) { return contenu[x][y]->type == VIDE; }
+bool Grille::EstDeType(int x, int y) { return contenu[x][y]->type == VIDE; }
 
 // on vérifie le contenu de grille
 bool Grille::EstDeType(int x, int y, TypePion t) {
@@ -35,30 +35,40 @@ bool Grille::EstDeType(int x, int y, TypePion t) {
 
 // Affichage de la grille avec la table ASCII
 void Grille::Afficher() {
-  string vertM = "|", vertHG = "+", vertHD = "+", vertBG = "+", vertBD = "+",
-         horM = "-", horLG = "|", horLD = "|", horL4 = "+", horLB = "+",
-         horLH = "+";
-    gotoligcol(0,0);
-  cout << vertHG;
-  for (int j = 0; j < 7; j++) cout << horM << horM << horM << horLH;
-  cout << horM << horM << horM << vertHD << endl;
-  for (int i = 0; i < 8; i++) {
-    cout << vertM;
-    for (int j = 0; j < 8; j++) cout << contenu[j][i]->Texte() << vertM;
-    cout << endl;
+    int i,j;
+    string vertM = "|", vertHG = "+", vertHD = "+", vertBG = "+", vertBD = "+",
+             horM = "-", horLG = "|", horLD = "|", horL4 = "+", horLB = "+",
+             horLH = "+";
+             cout <<"  1  "<<" 2  "<<" 3  "<<" 4  "<<" 5  "<<" 6  "<<" 7  "<<" 8  "<<endl;
+      cout << " "<<vertHG;
+      for (int j = 0; j < 7; j++) cout << horM << horM << horM << horLH;
+      cout << horM << horM << horM << vertHD << endl;
+      for (int i = 0; i < 8; i++) {
+        cout << i+1<<vertM;
+        for (int j = 0; j < 8; j++){ cout << contenu[j][i]->Texte() << vertM;}
+        cout << endl;
+        if (i == 3) {
+          cout << " "<< vertBG;
+          for (int j = 0; j < 7; j++) cout << horM << horM << horM << horLB;
+          cout << horM << horM << horM << vertBD;
+        } else {
+            cout <<  " " <<horLG << horM << horM << horM << horL4 << horM << horM << horM
+                 << horL4 << horM << horM << horM << horL4 << horM << horM << horM
+                 << horL4 << horM << horM << horM << horL4 << horM << horM << horM
+                 << horL4 << horM << horM << horM << horL4 << horM << horM << horM << horLD;
+        }
+        cout << endl;
+      }
+      for(i=0;i<8;i++){
+          for(j=0;j<8;j++){
+              gotoligcol(i,40);
+              if(contenu[i][j]->type == JOUABLE){
+                  cout <<"possibilite de l'IA : " << i+1 << j+1;
+                  contenu[i][j]->type = VIDE;}
 
-    if (i == 4) {
-      cout << vertBG;
-      for (int j = 0; j < 7; j++) cout << horM << horM << horM << horLB;
-      cout << horM << horM << horM << vertBD;
-    } else {
-        cout << horLG << horM << horM << horM << horL4 << horM << horM << horM
-             << horL4 << horM << horM << horM << horL4 << horM << horM << horM
-             << horL4 << horM << horM << horM << horL4 << horM << horM << horM
-             << horL4 << horM << horM << horM << horL4 << horM << horM << horM << horLD;
-    }
-    cout << endl;
-  }
+          }
+      }
+      gotoligcol(20,0);
 }
 
 // on ajoute un pion selon son type: blanc ou noir
@@ -83,33 +93,5 @@ void Grille::ChangerPionBlanc(int x, int y) { contenu[x][y] = new Blanc(); }
 
 void Grille::ChangerPionNoir(int x, int y) { contenu[x][y] = new Noir(); }
 
-
-void Grille::AfficherTab(){
-    string vertM = "|", vertHG = "+", vertHD = "+", vertBG = "+", vertBD = "+",
-           horM = "-", horLG = "|", horLD = "|", horL4 = "+", horLB = "+",
-           horLH = "+";
-
-    gotoligcol(0,80);
-    cout << vertHG;
-    for (int j = 0; j < 7; j++) cout << horM << horM << horM << horLH;
-    cout << horM << horM << horM << vertHD << endl;
-    for (int i = 0; i < 8; i++) {
-      cout << vertM;
-      for (int j = 0; j < 8; j++) cout << contenu[i][j]->Texte() << vertM;
-      cout << endl;
-
-      if (i == 4) {
-        cout << vertBG;
-        for (int j = 0; j < 7; j++) cout << horM << horM << horM << horLB;
-        cout << horM << horM << horM << vertBD;
-      } else {
-          cout << horLG << horM << horM << horM << horL4 << horM << horM << horM
-               << horL4 << horM << horM << horM << horL4 << horM << horM << horM
-               << horL4 << horM << horM << horM << horL4 << horM << horM << horM
-               << horL4 << horM << horM << horM << horL4 << horM << horM << horM << horLD;
-      }
-      cout << endl;
-    }
-}
 
 
