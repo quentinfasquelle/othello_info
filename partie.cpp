@@ -75,4 +75,6 @@ void Partie::TourSuivant() {
   }
   }
   else manager->AjouterAlea();
+
+
 }

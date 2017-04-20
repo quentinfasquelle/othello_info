@@ -14,6 +14,7 @@ class Manager {
   void AjouterPion();
   void ChangerPion(int x,int y, TypePion t);
   void RafraichirAffichage();
+  void RafraichirAffichageTab();
   void AjouterAlea();
   void ChangerJoueur(bool humain);
   void Elimine(int x, int y);

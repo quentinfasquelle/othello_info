@@ -1,8 +1,11 @@
 #include "manager.h"
 #include <iostream>
 #include <cstdlib>
+#include <windows.h>
 
 using namespace std;
+
+
 
 Manager::Manager() {
   grille = new Grille();
@@ -14,8 +17,11 @@ Manager::~Manager() {}
 
 void Manager::RafraichirAffichage() {
   CLEAR();
+
   grille->Afficher();
+  grille->AfficherTab();
 }
+
 
 void Manager::AjouterPion() {
   int x, y;
@@ -42,7 +48,6 @@ void Manager::AjouterPion() {
 
   RafraichirAffichage();
 
-
   if (grille->EstVide(x - 1, y - 1)) {
     grille->AjouterPion(x - 1, y - 1, NOIR);
     Elimine(x-1,y-1);
@@ -50,6 +55,7 @@ void Manager::AjouterPion() {
     cout << "Le Pion a bien ete ajoute!" << endl;
   } else {
     cout << "La case choisie n'est pas vide, ou pas en bordure!" << endl;
+    Balayage();
     AjouterPion();
   }
 }
@@ -122,22 +128,16 @@ void Manager::Elimine(int x, int y){
     if(grille->EstDeType(x,y+2,NOIR))ChangerPion(x,y+1,BLANC);
 }
 
-
-int Manager::Balayage()
+void Manager::Balayage()
 {
-    int tab[8][8];
     int i,j;
     for(i=0; i<8; i++){
         for(j=0; j<8; j++){
-            if(grille->EstVide(i,j))tab[i][j]=VIDE;
-            if(grille->EstDeType(i,j,BLANC))tab[i][j]=BLANC;
-            else tab[i][j]=NOIR;
+            if(grille->EstVide(i,j))grille->tab[i][j]->type=VIDE;
+            if(grille->EstDeType(i,j,BLANC))grille->tab[i][j]->type=BLANC;
+            else grille->tab[i][j]->type=NOIR;
         }
-    }
-    for(i=0; i<8; i++){
-        for(j=0; j<8; j++){
 
-        }
     }
-    return tab;
+
 }
