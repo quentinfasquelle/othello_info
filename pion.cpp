@@ -14,8 +14,10 @@ string Pion::Texte() {
       return "\E[31;1m X \E[m";
     case VIDE:
       return "   ";
-    case JOUABLE:
+    case JOUEUR:
       return "\E[30;1m J \E[m";
+  case JOUABLE:
+    return "   ";
     default:
       s += " ?";
   }

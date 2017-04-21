@@ -25,4 +25,4 @@ class Grille {
 
 
 
-#endif  // GRILLE_H
+#endif // GRILLE_H

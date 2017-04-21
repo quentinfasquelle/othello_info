@@ -16,7 +16,8 @@ Manager::~Manager() {}
 
 void Manager::RafraichirAffichage() {
   CLEAR();
-  Balayage();
+  BalayageIA();
+  BalayageJoueur();
   grille->Afficher();
 }
 
@@ -46,9 +47,10 @@ void Manager::AjouterPion() {
 
   RafraichirAffichage();
 
-  if (grille->EstDeType(x - 1, y - 1)) {
+    if(grille->EstDeType(x-1,y-1,JOUEUR)){
+        grille->contenu[x-1][y-1]->type = VIDE;
     grille->AjouterPion(x - 1, y - 1, NOIR);
-    Elimine(x-1,y-1);
+    ElimineJoueur(x-1,y-1);
 
     cout << "Le Pion a bien ete ajoute!" << endl;
   } else {
@@ -71,23 +73,20 @@ int rand_a_b(int a, int b){
 }
 
 void Manager::AjouterAlea() {
-
-    int sortie = 0;
-   // int i = 0;
-    // int j = 0;
     int k = 0;
     int l = 0;
-    //int x = 0;
-    //int y = 0;
-
-    while(sortie == 0)
-    {
-        k = rand_a_b(0,8);
-        l = rand_a_b(0,8);
-        if(grille->EstDeType(k,l)){
+    int sortie=0;
+    BalayageIA();
+    for(k=0;k<8;k++){
+        for(l=0;l<8;l++){
+        if(sortie == 0){
+        if(grille->EstDeType(k,l,JOUABLE)){
             grille->AjouterPion(k,l,BLANC);
-            sortie = 1;
+            ElimineIA(k,l);
+            sortie =1;
         }
+        }
+    }
     }
 
    RafraichirAffichage();
@@ -102,59 +101,59 @@ void Manager::ChangerJoueur(bool humain) {
 }
 
 
-void Manager::Elimine(int x, int y){
+void Manager::ElimineJoueur(int x, int y){
 
     if(grille->EstDeType(x,y,NOIR)){
-        if((x>=0 && y>=0) || (x+2<8 && y+2<8)){
+        if((x>=0 && y>=0) && (x+2<8 && y+2<8)){
             if(grille->EstDeType(x+1,y+1,BLANC)){
                 if(grille->EstDeType(x+2,y+2,NOIR)){
                     grille->contenu[x+1][y+1]->type = NOIR;
                 }
             }
         }
-        if((x>=0 && y>=0) || (x<8 && y+2<8)){
+        if((x>=0 && y>=0) && (x<8 && y+2<8)){
             if(grille->EstDeType(x,y+1,BLANC)){
                 if(grille->EstDeType(x,y+2,NOIR)){
                     grille->contenu[x][y+1]->type = NOIR;
                 }
             }
         }
-        if((x-2>=0 && y>=0) || (x<8 && y+2<8)){
+        if((x-2>=0 && y>=0) && (x<8 && y+2<8)){
             if(grille->EstDeType(x-1,y+1,BLANC)){
                 if(grille->EstDeType(x-2,y+2,NOIR)){
                     grille->contenu[x-1][y+1]->type = NOIR;
                 }
             }
         }
-        if((x-2>=0 && y>=0) || (x<8 && y<8)){
+        if((x-2>=0 && y>=0) && (x<8 && y<8)){
             if(grille->EstDeType(x-1,y,BLANC)){
                 if(grille->EstDeType(x-2,y,NOIR)){
                     grille->contenu[x-1][y]->type = NOIR;
                 }
             }
         }
-        if((x-2>=0 && y-2>=0) || (x<8 && y<8)){
+        if((x-2>=0 && y-2>=0) && (x<8 && y<8)){
             if(grille->EstDeType(x-1,y-1,BLANC)){
                 if(grille->EstDeType(x-2,y-2,NOIR)){
                     grille->contenu[x-1][y-1]->type = NOIR;
                 }
             }
         }
-        if((x>=0 && y-2>=0) || (x<8 && y<8)){
+        if((x>=0 && y-2>=0) && (x<8 && y<8)){
             if(grille->EstDeType(x,y-1,BLANC)){
                 if(grille->EstDeType(x,y-2,NOIR)){
                     grille->contenu[x][y-1]->type = NOIR;
                 }
             }
         }
-        if((x>=0 && y-2>=0) || (x+2<8 && y<8)){
+        if((x>=0 && y-2>=0) && (x+2<8 && y<8)){
             if(grille->EstDeType(x+1,y-1,BLANC)){
                 if(grille->EstDeType(x+2,y-2,NOIR)){
                     grille->contenu[x+1][y-1]->type = NOIR;
                 }
             }
         }
-        if((x>=0 && y>=0) || (x+2<8 && y<8)){
+        if((x>=0 && y>=0) && (x+2<8 && y<8)){
             if(grille->EstDeType(x+1,y,BLANC)){
                 if(grille->EstDeType(x+2,y,NOIR)){
                     grille->contenu[x+1][y]->type = NOIR;
@@ -164,65 +163,126 @@ void Manager::Elimine(int x, int y){
     }
 
 }
+void Manager::ElimineIA(int x, int y){
 
-void Manager::Balayage()
+    if(grille->EstDeType(x,y,BLANC)){
+        if((x>=0 && y>=0) && (x+2<8 && y+2<8)){
+            if(grille->EstDeType(x+1,y+1,NOIR)){
+                if(grille->EstDeType(x+2,y+2,BLANC)){
+                    grille->contenu[x+1][y+1]->type = BLANC;
+                }
+            }
+        }
+        if((x>=0 && y>=0) && (x<8 && y+2<8)){
+            if(grille->EstDeType(x,y+1,NOIR)){
+                if(grille->EstDeType(x,y+2,BLANC)){
+                    grille->contenu[x][y+1]->type = BLANC;
+                }
+            }
+        }
+        if((x-2>=0 && y>=0) && (x<8 && y+2<8)){
+            if(grille->EstDeType(x-1,y+1,NOIR)){
+                if(grille->EstDeType(x-2,y+2,BLANC)){
+                    grille->contenu[x-1][y+1]->type = BLANC;
+                }
+            }
+        }
+        if((x-2>=0 && y>=0) && (x<8 && y<8)){
+            if(grille->EstDeType(x-1,y,NOIR)){
+                if(grille->EstDeType(x-2,y,BLANC)){
+                    grille->contenu[x-1][y]->type = BLANC;
+                }
+            }
+        }
+        if((x-2>=0 && y-2>=0) && (x<8 && y<8)){
+            if(grille->EstDeType(x-1,y-1,NOIR)){
+                if(grille->EstDeType(x-2,y-2,BLANC)){
+                    grille->contenu[x-1][y-1]->type = BLANC;
+                }
+            }
+        }
+        if((x>=0 && y-2>=0) && (x<8 && y<8)){
+            if(grille->EstDeType(x,y-1,NOIR)){
+                if(grille->EstDeType(x,y-2,BLANC)){
+                    grille->contenu[x][y-1]->type = BLANC;
+                }
+            }
+        }
+        if((x>=0 && y-2>=0) && (x+2<8 && y<8)){
+            if(grille->EstDeType(x+1,y-1,NOIR)){
+                if(grille->EstDeType(x+2,y-2,BLANC)){
+                    grille->contenu[x+1][y-1]->type = BLANC;
+                }
+            }
+        }
+        if((x>=0 && y>=0) && (x+2<8 && y<8)){
+            if(grille->EstDeType(x+1,y,NOIR)){
+                if(grille->EstDeType(x+2,y,BLANC)){
+                    grille->contenu[x+1][y]->type = BLANC;
+                }
+            }
+        }
+    }
+
+}
+void Manager::BalayageIA()
 {
     int i,j;
     for(i=0; i<8; i++){
         for(j=0; j<8; j++){
             if(grille->EstDeType(i,j,BLANC)){
-                if((i>=0 && j>=0) || (i+2<8 && j+2<8)){
+                if((i>=0 && j>=0) && (i+2<8 && j+2<8)){
                     if(grille->EstDeType(i+1,j+1,NOIR)){
-                        if(grille->EstDeType(i+2,j+2)){
+                        if(grille->EstDeType(i+2,j+2,VIDE)){
                             grille->contenu[i+2][j+2]->type = JOUABLE;
                         }
                     }
                 }
-                if((i>=0 && j>=0) || (i<8 && j+2<8)){
+                if((i>=0 && j>=0) && (i<8 && j+2<8)){
                     if(grille->EstDeType(i,j+1,NOIR)){
-                        if(grille->EstDeType(i,j+2)){
+                        if(grille->EstDeType(i,j+2,VIDE)){
                             grille->contenu[i][j+2]->type = JOUABLE;
                         }
                     }
                 }
-                if((i-2>=0 && j>=0) || (i<8 && j+2<8)){
+                if((i-2>=0 && j>=0) && (i<8 && j+2<8)){
                     if(grille->EstDeType(i-1,j+1,NOIR)){
-                        if(grille->EstDeType(i-2,j+2)){
+                        if(grille->EstDeType(i-2,j+2,VIDE)){
                             grille->contenu[i-2][j+2]->type = JOUABLE;
                         }
                     }
                 }
-                if((i-2>=0 && j>=0) || (i<8 && j<8)){
+                if((i-2>=0 && j>=0) && (i<8 && j<8)){
                     if(grille->EstDeType(i-1,j,NOIR)){
-                        if(grille->EstDeType(i-2,j)){
+                        if(grille->EstDeType(i-2,j,VIDE)){
                             grille->contenu[i-2][j]->type = JOUABLE;
                         }
                     }
                 }
-                if((i-2>=0 && j-2>=0) || (i<8 && j<8)){
+                if((i-2>=0 && j-2>=0) && (i<8 && j<8)){
                     if(grille->EstDeType(i-1,j-1,NOIR)){
-                        if(grille->EstDeType(i-2,j-2)){
+                        if(grille->EstDeType(i-2,j-2,VIDE)){
                             grille->contenu[i-2][j-2]->type = JOUABLE;
                         }
                     }
                 }
-                if((i>=0 && j-2>=0) || (i<8 && j<8)){
+                if((i>=0 && j-2>=0) && (i<8 && j<8)){
                     if(grille->EstDeType(i,j-1,NOIR)){
-                        if(grille->EstDeType(i,j-2)){
+                        if(grille->EstDeType(i,j-2,VIDE)){
                             grille->contenu[i][j-2]->type = JOUABLE;
                         }
                     }
                 }
-                if((i>=0 && j-2>=0) || (i+2<8 && j<8)){
+                if((i>=0 && j-2>=0) && (i+2<8 && j<8)){
                     if(grille->EstDeType(i+1,j-1,NOIR)){
-                        if(grille->EstDeType(i+2,j-2)){
+                        if(grille->EstDeType(i+2,j-2,VIDE)){
                             grille->contenu[i+2][j-2]->type = JOUABLE;
                         }
                     }
                 }
-                if((i>=0 && j>=0) || (i+2<8 && j<8)){
+                if((i>=0 && j>=0) && (i+2<8 && j<8)){
                     if(grille->EstDeType(i+1,j,NOIR)){
-                        if(grille->EstDeType(i+2,j)){
+                        if(grille->EstDeType(i+2,j,VIDE)){
                             grille->contenu[i+2][j]->type = JOUABLE;
                         }
                     }
@@ -231,6 +291,72 @@ void Manager::Balayage()
 
         }
     }
+}
 
+void Manager::BalayageJoueur()
+{
+    int i,j;
+    for(i=0; i<8; i++){
+        for(j=0; j<8; j++){
+            if(grille->EstDeType(i,j,NOIR)){
+                if((i>=0 && j>=0) && (i+2<8 && j+2<8)){
+                    if(grille->EstDeType(i+1,j+1,BLANC)){
+                        if(grille->EstDeType(i+2,j+2,VIDE)){
+                            grille->contenu[i+2][j+2]->type = JOUEUR;
+                        }
+                    }
+                }
+                if((i>=0 && j>=0) && (i<8 && j+2<8)){
+                    if(grille->EstDeType(i,j+1,BLANC)){
+                        if(grille->EstDeType(i,j+2,VIDE)){
+                            grille->contenu[i][j+2]->type = JOUEUR;
+                        }
+                    }
+                }
+                if((i-2>=0 && j>=0) && (i<8 && j+2<8)){
+                    if(grille->EstDeType(i-1,j+1,BLANC)){
+                        if(grille->EstDeType(i-2,j+2,VIDE)){
+                            grille->contenu[i-2][j+2]->type = JOUEUR;
+                        }
+                    }
+                }
+                if((i-2>=0 && j>=0) && (i<8 && j<8)){
+                    if(grille->EstDeType(i-1,j,BLANC)){
+                        if(grille->EstDeType(i-2,j,VIDE)){
+                            grille->contenu[i-2][j]->type = JOUEUR;
+                        }
+                    }
+                }
+                if((i-2>=0 && j-2>=0) && (i<8 && j<8)){
+                    if(grille->EstDeType(i-1,j-1,BLANC)){
+                        if(grille->EstDeType(i-2,j-2,VIDE)){
+                            grille->contenu[i-2][j-2]->type = JOUEUR;
+                        }
+                    }
+                }
+                if((i>=0 && j-2>=0) && (i<8 && j<8)){
+                    if(grille->EstDeType(i,j-1,BLANC)){
+                        if(grille->EstDeType(i,j-2,VIDE)){
+                            grille->contenu[i][j-2]->type = JOUEUR;
+                        }
+                    }
+                }
+                if((i>=0 && j-2>=0) && (i+2<8 && j<8)){
+                    if(grille->EstDeType(i+1,j-1,BLANC)){
+                        if(grille->EstDeType(i+2,j-2,VIDE)){
+                            grille->contenu[i+2][j-2]->type = JOUEUR;
+                        }
+                    }
+                }
+                if((i>=0 && j>=0) && (i+2<8 && j<8)){
+                    if(grille->EstDeType(i+1,j,BLANC)){
+                        if(grille->EstDeType(i+2,j,VIDE)){
+                            grille->contenu[i+2][j]->type = JOUEUR;
+                        }
+                    }
+                }
+            }
 
+        }
+    }
 }

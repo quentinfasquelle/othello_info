@@ -17,8 +17,10 @@ class Manager {
   void RafraichirAffichageTab();
   void AjouterAlea();
   void ChangerJoueur(bool humain);
-  void Elimine(int x, int y);
-  void Balayage();
+  void ElimineJoueur(int x, int y);
+  void ElimineIA(int x, int y);
+  void BalayageIA();
+  void BalayageJoueur();
 };
 
-#endif  // MANAGER_H
+#endif // MANAGER_H

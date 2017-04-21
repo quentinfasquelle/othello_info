@@ -5,7 +5,7 @@
 
 using namespace std;
 
-enum TypePion { BLANC , NOIR , VIDE , JOUABLE };
+enum TypePion { BLANC , NOIR , VIDE , JOUABLE , JOUEUR};
 
 class Pion {
  private:
@@ -38,4 +38,4 @@ class PionJoueur : public Pion {
   }
 };
 
-#endif  // PION_H
+#endif // PION_H

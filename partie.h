@@ -18,4 +18,4 @@ class Partie {
   void TourSuivant();
 };
 
-#endif  // PARTIE_H
+#endif // PARTIE_H

@@ -92,6 +92,3 @@ void Grille::AjouterPion(int x, int y, TypePion t) {
 void Grille::ChangerPionBlanc(int x, int y) { contenu[x][y] = new Blanc(); }
 
 void Grille::ChangerPionNoir(int x, int y) { contenu[x][y] = new Noir(); }
-
-
-
